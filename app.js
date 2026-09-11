@@ -1,10 +1,14 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
 const SUPABASE_URL = 'https://ezzlxndxtduujngrqlmx.supabase.co';
 const SUPABASE_ANON_KEY = 'Sb_publishable_3OhWxq4-FErEYXU360iyRg_NxK7hQPO';
 
 function showError(msg) {
     const box = document.getElementById('error-box');
-    box.style.display = 'block';
-    box.innerText += msg + '\n';
+    if (box) {
+        box.style.display = 'block';
+        box.innerText += msg + '\n';
+    }
 }
 
 window.addEventListener('error', (event) => {
@@ -12,7 +16,7 @@ window.addEventListener('error', (event) => {
 });
 
 try {
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const gridSize = 10;
     const gridEl = document.getElementById('grid');
     let colorToPaint = '#' + Math.floor(Math.random()*16777215).toString(16);
