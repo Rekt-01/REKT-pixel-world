@@ -5,7 +5,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const gridSize = 10;
 const gridEl = document.getElementById('grid');
-let colorToPaint = '#' + Math.floor(Math.random()*16777215).toString(16); // Random color for this session
+let colorToPaint = '#' + Math.floor(Math.random()*16777215).toString(16);
 
 // 1. Build the 10x10 grid on the screen
 function createGrid() {
@@ -17,7 +17,7 @@ function createGrid() {
             cell.dataset.y = y;
             cell.id = `cell-${x}-${y}`;
             
-            // Click to paint and save
+            // Support both click and touch interactions seamlessly
             cell.addEventListener('click', () => paintCell(x, y));
             gridEl.appendChild(cell);
         }
@@ -45,7 +45,6 @@ async function paintCell(x, y) {
     const cell = document.getElementById(`cell-${x}-${y}`);
     cell.style.backgroundColor = colorToPaint;
 
-    // Upsert means: if the coordinate exists, update it. If not, insert it.
     const { error } = await supabase
         .from('plots')
         .upsert({ x: x, y: y, color: colorToPaint }, { onConflict: ['x', 'y'] });
