@@ -5,48 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixel World Trial</title>
     <style>
-        body { 
-            font-family: sans-serif; 
-            text-align: center; 
-            background: #222; 
-            color: #fff; 
-            margin: 0; 
-            padding: 20px; 
-        }
+        body { font-family: sans-serif; text-align: center; background: #222; color: #fff; margin: 0; padding: 20px; }
         h1 { font-size: 1.5rem; margin-top: 10px; }
-        p { font-size: 0.9rem; color: #aaa; }
-        
-        #grid-container {
-            width: 100%;
-            overflow-x: auto; /* Allows horizontal scrolling if screen is too small */
-            margin-top: 20px;
-        }
-
-        #grid { 
-            display: grid; 
-            grid-template-columns: repeat(10, 35px); 
-            gap: 2px; 
-            justify-content: center; 
-            min-width: 370px; /* Ensures grid doesn't squish on tiny phones */
-        }
-        
-        .cell { 
-            width: 35px; 
-            height: 35px; 
-            background: #444; 
-            border: 1px solid #555; 
-            cursor: pointer; 
-            touch-action: manipulation; /* Removes mobile tap delay */
-        }
-        .cell:active { border-color: #fff; }
+        #error-box { background: #511; color: #ff8888; padding: 10px; margin: 10px auto; max-width: 400px; word-break: break-all; display: none; font-size: 0.8rem; text-align: left; }
+        #grid-container { width: 100%; overflow-x: auto; margin-top: 20px; }
+        #grid { display: grid; grid-template-columns: repeat(10, 35px); gap: 2px; justify-content: center; min-width: 370px; }
+        .cell { width: 35px; height: 35px; background: #444; border: 1px solid #555; cursor: pointer; touch-action: manipulation; }
     </style>
-    <!-- Load Supabase client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
     <h1>Pixel World Trial</h1>
-    <p>Tap any tile to color it! Changes save to Supabase.</p>
+    <p>Tap any tile to color it!</p>
+    <div id="error-box"></div>
     
     <div id="grid-container">
         <div id="grid"></div>
