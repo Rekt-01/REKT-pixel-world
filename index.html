@@ -3,27 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel World Trial</title>
+    <title>Pixel World</title>
     <style>
         body { font-family: sans-serif; text-align: center; background: #222; color: #fff; margin: 0; padding: 20px; }
         h1 { font-size: 1.5rem; margin-top: 10px; }
         #error-box { background: #511; color: #ff8888; padding: 10px; margin: 10px auto; max-width: 400px; word-break: break-all; display: none; font-size: 0.8rem; text-align: left; }
-        #grid-container { width: 100%; overflow-x: auto; margin-top: 20px; }
-        #grid { display: grid; grid-template-columns: repeat(10, 35px); gap: 2px; justify-content: center; min-width: 370px; }
-        .cell { width: 35px; height: 35px; background: #444; border: 1px solid #555; cursor: pointer; touch-action: manipulation; }
+        
+        /* Palette Styles */
+        #palette { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+        .swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #555; cursor: pointer; }
+        .swatch.active { border-color: #fff; transform: scale(1.1); }
+
+        #grid-container { width: 100%; overflow: auto; margin-top: 10px; max-height: 70vh; border: 1px solid #444; }
+        #grid { display: grid; grid-template-columns: repeat(20, 30px); gap: 1px; justify-content: center; background: #333; }
+        .cell { width: 30px; height: 30px; background: #111; cursor: pointer; touch-action: manipulation; }
     </style>
 </head>
 <body>
 
-    <h1>Pixel World Trial</h1>
-    <p>Tap any tile to color it!</p>
+    <h1>Pixel World</h1>
+    <p>Choose a color and paint the world!</p>
     <div id="error-box"></div>
+
+    <!-- Color Palette -->
+    <div id="palette">
+        <div class="swatch active" style="background: #ff4757;" data-color="#ff4757"></div>
+        <div class="swatch" style="background: #2ed573;" data-color="#2ed573"></div>
+        <div class="swatch" style="background: #1e90ff;" data-color="#1e90ff"></div>
+        <div class="swatch" style="background: #ffa502;" data-color="#ffa502"></div>
+        <div class="swatch" style="background: #ffffff;" data-color="#ffffff"></div>
+        <div class="swatch" style="background: #2f3542;" data-color="#2f3542"></div>
+    </div>
     
     <div id="grid-container">
         <div id="grid"></div>
     </div>
 
-    <!-- Load script as a module -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
