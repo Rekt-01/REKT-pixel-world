@@ -13,16 +13,22 @@ function showError(msg) {
     }
 }
 
-window.addEventListener('error', (event) => {
-    showError('JS Error: ' + event.message);
-});
-
 try {
-    const gridSize = 10;
+    const gridSize = 20; // Expanded world size
     const gridEl = document.getElementById('grid');
-    let colorToPaint = '#' + Math.floor(Math.random()*16777215).toString(16);
+    let currentColor = '#ff4757';
+
+    // Handle color picker UI selection
+    document.querySelectorAll('.swatch').forEach(swatch => {
+        swatch.addEventListener('click', (e) => {
+            document.querySelector('.swatch.active').classList.remove('active');
+            e.target.classList.add('active');
+            currentColor = e.target.dataset.color;
+        });
+    });
 
     function createGrid() {
+        gridEl.style.gridTemplateColumns = `repeat(${gridSize}, 30px)`;
         for (let y = 0; y < gridSize; y++) {
             for (let x = 0; x < gridSize; x++) {
                 const cell = document.createElement('div');
@@ -37,7 +43,7 @@ try {
     async function loadGrid() {
         const { data, error } = await supabase.from('plots').select('*');
         if (error) {
-            showError('Supabase Load Error: ' + JSON.stringify(error));
+            showError('Load Error: ' + JSON.stringify(error));
             return;
         }
         data.forEach(plot => {
@@ -48,17 +54,34 @@ try {
 
     async function paintCell(x, y) {
         const cell = document.getElementById(`cell-${x}-${y}`);
-        cell.style.backgroundColor = colorToPaint;
+        cell.style.backgroundColor = currentColor;
+        
         const { error } = await supabase
             .from('plots')
-            .upsert({ x: x, y: y, color: colorToPaint }, { onConflict: ['x', 'y'] });
+            .upsert({ x: x, y: y, color: currentColor }, { onConflict: ['x', 'y'] });
+        
         if (error) {
-            showError('Supabase Save Error: ' + JSON.stringify(error));
+            showError('Save Error: ' + JSON.stringify(error));
         }
+    }
+
+    // Enable Supabase Realtime Subscription for instant multiplayer updates
+    function setupRealtimeSubscription() {
+        supabase
+            .channel('public:plots')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'plots' }, payload => {
+                const updatedPlot = payload.new;
+                const cell = document.getElementById(`cell-${updatedPlot.x}-${updatedPlot.y}`);
+                if (cell) {
+                    cell.style.backgroundColor = updatedPlot.color;
+                }
+            })
+            .subscribe();
     }
 
     createGrid();
     loadGrid();
+    setupRealtimeSubscription();
 
 } catch (err) {
     showError('Init Error: ' + err.message);
